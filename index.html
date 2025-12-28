@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Opening Obsidian...</title>
+    <meta charset="utf-8">
+    <script>
+        // Logic: Get the "link" parameter from the URL and open it
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            // We look for ?link=obsidian://...
+            const target = params.get('link'); 
+            
+            if (target && target.startsWith('obsidian://')) {
+                // The "Bounce" - sends you to the app
+                window.location.href = target;
+                
+                // Optional: Close this window after 3 seconds so you don't have empty tabs
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+            } else {
+                document.body.innerHTML = "❌ Error: No valid Obsidian link provided.";
+            }
+        }
+    </script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+    </style>
+</head>
+<body>
+    <h2>🚀 Launching Obsidian...</h2>
+    <p>If it doesn't open automatically, <a id="manual" href="#">click here</a>.</p>
+    <script>
+        // Make the manual link work just in case
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('link');
+        if (target) document.getElementById('manual').href = target;
+    </script>
+</body>
+</html>
