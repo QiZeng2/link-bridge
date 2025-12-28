@@ -4,22 +4,28 @@
     <title>Opening Obsidian...</title>
     <meta charset="utf-8">
     <script>
-        // Logic: Get the "link" parameter from the URL and open it
         window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            // We look for ?link=obsidian://...
-            const target = params.get('link'); 
+            // THE FIX: Do not use URLSearchParams (it breaks at '&')
+            // Instead, we manually grab everything after 'link='
+            const url = window.location.href;
             
-            if (target && target.startsWith('obsidian://')) {
-                // The "Bounce" - sends you to the app
-                window.location.href = target;
-                
-                // Optional: Close this window after 3 seconds so you don't have empty tabs
-                setTimeout(() => {
-                    window.close();
-                }, 3000);
+            if (url.includes('link=')) {
+                // Split the URL at 'link=' and take the second part
+                // decodeURIComponent ensures %20 turns back into spaces if needed
+                const rawTarget = url.split('link=')[1];
+                const target = decodeURIComponent(rawTarget);
+
+                if (target && target.startsWith('obsidian://')) {
+                    window.location.href = target;
+                    
+                    setTimeout(() => {
+                        window.close();
+                    }, 3000);
+                } else {
+                    document.body.innerHTML = "❌ Error: Invalid Obsidian link.";
+                }
             } else {
-                document.body.innerHTML = "❌ Error: No valid Obsidian link provided.";
+                 document.body.innerHTML = "❌ Error: No link parameter found.";
             }
         }
     </script>
@@ -37,4 +43,5 @@
         if (target) document.getElementById('manual').href = target;
     </script>
 </body>
+
 </html>
